@@ -1,0 +1,18 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 50m
+    max-file: 1
+
+services:
+  code-server:
+    container_name: code-server
+    image: codercom/code-server:4.21.1-39
+    logging: *default-logging
+    restart: unless-stopped
+    volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/code-server/config.yaml:/home/coder/.config/code-server/config.yaml
+      - $PWD/code-server/src:/home/coder/src
+    ports:
+      - "80:8080"
