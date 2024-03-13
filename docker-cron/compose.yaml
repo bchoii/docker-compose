@@ -1,0 +1,20 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 50m
+    max-file: 1
+
+services:
+  docker-cron:
+    container_name: docker-cron
+    image: docker:cli
+    logging: *default-logging
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: [
+        "/bin/sh",
+        "-c",
+        # reload every 10 min
+        "while true; do sleep 600; docker exec -w /etc/caddy caddy caddy reload; done",
+      ]
+    restart: unless-stopped
